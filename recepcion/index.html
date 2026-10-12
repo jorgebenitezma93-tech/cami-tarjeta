@@ -2,6 +2,7 @@
 <html lang="es-MX">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Recepción · Tarjeta CAMI</title>
 <meta name="robots" content="noindex,nofollow,noarchive">
@@ -9,9 +10,6 @@
 <meta name="theme-color" content="#0077C0">
 <link rel="icon" href="../assets/favicon-48.png" sizes="48x48">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/tarjeta.css">
 </head>
 <body>
@@ -24,15 +22,12 @@
   <!-- 1. Entrada con PIN -->
   <section id="login" class="panel" hidden>
     <h1 style="font-size:1.3rem;margin-bottom:6px">Entrar</h1>
-    <p class="muted" style="margin-bottom:16px">Escribe el PIN de recepción. Solo lo conoce la recepcionista.</p>
+    <p class="muted" style="margin-bottom:16px">Escribe tu clave personal. Es solo tuya: no la compartas. Cada sello que pongas quedará a tu nombre.</p>
     <div id="login-aviso" role="alert"></div>
     <form id="form-login" autocomplete="off">
-      <div class="campo"><label for="pin">PIN (6 números)</label>
-        <input id="pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" required></div>
-      <div class="campo"><label for="quien">Tu nombre (opcional)</label>
-        <input id="quien" name="quien" type="text" maxlength="30" autocomplete="off" autocapitalize="words">
-        <p class="ayuda">Se guarda junto a cada sello que pongas.</p></div>
-      <div class="casilla-aviso" style="margin-bottom:14px"><input id="recordar" type="checkbox"><label for="recordar">Mantener la sesión abierta en este celular (solo si es el celular de recepción)</label></div>
+      <div class="campo"><label for="clave">Tu clave</label>
+        <input id="clave" name="clave" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="64" required>
+        <p class="ayuda">La sesión se cierra sola tras unos minutos sin usarla.</p></div>
       <button class="btn primario" id="btn-entrar" type="submit">Entrar</button>
     </form>
   </section>
