@@ -58,7 +58,7 @@
   const API = {
     /** Tarjeta del paciente: solo lectura, sin PIN. */
     tarjeta: function (codigo) {
-      return llamar(CT.API_URL + (CT.API_URL.indexOf('?') < 0 ? '?' : '&') + 'accion=tarjeta&c=' + encodeURIComponent(codigo));
+      return llamar(CT.API_URL + (CT.API_URL.indexOf('?') < 0 ? '?' : '&') + 'accion=tarjeta&cod=' + encodeURIComponent(codigo));
     },
     /** Acciones de la recepción: siempre con PIN. Se envía como texto simple para evitar la verificación previa (CORS) del navegador. */
     recepcion: function (accion, datos) {
