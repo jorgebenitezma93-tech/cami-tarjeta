@@ -25,7 +25,11 @@
 
     const meta = d.meta || 5;
     let casillas = '';
-    for (let i = 0; i < meta; i++) casillas += '<span class="' + (i < d.conteo ? 'on' : '') + '">' + (i < d.conteo ? '✓' : (i + 1)) + '</span>';
+    for (let i = 0; i < meta; i++) {
+      const s = d.sellos[i];   // un sello puesto muestra el día y el mes en que se puso
+      const f = s ? C.fechaCorta(s.fecha).split(' ') : null;
+      casillas += s ? '<span class="on"><b>' + esc(f[0]) + '</b><i>' + esc(f[1]) + '</i></span>' : '<span>' + (i + 1) + '</span>';
+    }
     casillas += '<span class="premio">' + (d.descuento >= 100 ? 'GRATIS' : d.descuento + '%') + '</span>';
     $('reverso').innerHTML =
       '<h2>' + esc(T.tituloImpreso) + '</h2>' +
