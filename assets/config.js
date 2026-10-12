@@ -11,6 +11,7 @@ window.CAMI_TARJETA = {
   TELEFONO_TXT: "55 6022 9681",
 
   VIGENCIA_MESES: 12,
+  INACTIVIDAD_MIN: 15,   // minutos sin tocar la pantalla de recepción para cerrar la sesión (igual en el .gs)
 
   // Dos tipos de tarjeta (regla de CAMI, 12 de octubre de 2026). Los sellos necesarios y el descuento de cada tipo
   // se definen en TIPOS dentro de apps-script/tarjeta-apps-script.gs; si cambian allá, cambiar aquí los textos.
