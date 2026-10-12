@@ -12,22 +12,25 @@
     const d = await C.API.tarjeta(codigo);
     if (!d.ok) { error('No se pudo preparar la tarjeta', d.mensaje); return; }
 
+    const T = C.tipo(d.tipo), clase = C.claseTipo(d.tipo);
+    $('frente').className = 'cara frente ' + clase; $('reverso').className = 'cara reverso ' + clase;
     $('frente').innerHTML =
       '<div class="banda"></div><img class="logo" src="../assets/cami-logo.png" alt="CAMI">' +
-      '<div class="tipo">Tarjeta de cliente frecuente</div>' +
+      '<div class="tipo">Cliente frecuente<br>' + esc(T.etiqueta) + '</div>' +
       '<div class="nombre">' + esc(d.nombre) + '</div>' +
       '<div class="qr">' + C.qrSvg(C.urlTarjeta(codigo), 'Código QR de la tarjeta') + '</div>' +
       '<div class="indica">Muestra este código en recepción</div>' +
       '<div class="pie-cara">camixochimilco.com.mx · WhatsApp ' + esc(CT.TELEFONO_TXT) + '</div>' +
       '<span class="etq">Frente</span>';
 
-    const meta = d.meta || CT.META;
+    const meta = d.meta || 5;
     let casillas = '';
     for (let i = 0; i < meta; i++) casillas += '<span class="' + (i < d.conteo ? 'on' : '') + '">' + (i < d.conteo ? '✓' : (i + 1)) + '</span>';
+    casillas += '<span class="premio">' + (d.descuento >= 100 ? 'GRATIS' : d.descuento + '%') + '</span>';
     $('reverso').innerHTML =
-      '<h2>' + meta + ' sellos = ' + CT.DESCUENTO + '% de descuento</h2>' +
+      '<h2>' + esc(T.tituloImpreso) + '</h2>' +
       '<div class="casillas-imp">' + casillas + '</div>' +
-      '<p>' + esc(CT.TEXTO_REGLA) + '</p>' +
+      '<p>' + esc(T.regla) + '</p>' +
       '<span class="etq">Reverso</span>';
 
     $('hoja').hidden = false; $('instrucciones').hidden = false;

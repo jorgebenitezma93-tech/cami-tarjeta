@@ -25,7 +25,8 @@
 
   function pintar(d, opciones) {
     opciones = opciones || {};
-    const meta = d.meta || CT.META;
+    const meta = d.meta || 5;
+    const T = C.tipo(d.tipo);
     let casillas = '';
     for (let i = 0; i < meta; i++) {
       const s = d.sellos[i];
@@ -34,26 +35,34 @@
         ? '<li class="sello puesto' + nuevo + '"><span class="circulo" role="img" aria-label="Sello ' + (i + 1) + ', ' + esc(C.fechaLarga(s.fecha)) + '">' + CHECK + '</span><span class="fecha">' + esc(C.fechaCorta(s.fecha)) + '</span></li>'
         : '<li class="sello"><span class="circulo" aria-label="Sello ' + (i + 1) + ', vacío">' + (i + 1) + '</span><span class="fecha"></span></li>';
     }
+    const premioTxt = d.descuento >= 100 ? 'GRATIS' : d.descuento + '%';
+    casillas += '<li class="sello premio' + (d.recompensa ? ' listo' : '') + '"><span class="circulo" role="img" aria-label="Sexta sesión: ' + esc(T.premio) + '">' + premioTxt + '</span><span class="fecha">Sexta sesión</span></li>';
     let nota = '';
     if (d.recompensa) nota = 'Completaste tus ' + meta + ' sellos.';
     else if (d.proximoVence) nota = 'Tu sello más antiguo vence el ' + C.fechaLarga(d.proximoVence) + '.';
     else if (d.canjes) nota = 'Ya canjeaste ' + d.canjes + (d.canjes === 1 ? ' recompensa. ¡Gracias!' : ' recompensas. ¡Gracias!');
-    else nota = 'Pide tu primer sello en tu próxima sesión de rehabilitación.';
+    else nota = 'Pide tu primer sello en tu próxima ' + T.sesion + '.';
 
     const avance = d.recompensa ? '¡Tarjeta completa!' : d.conteo + ' de ' + meta + ' sellos';
     let html = '';
     if (opciones.sinConexion) {
       html += '<div class="aviso alerta"><strong>Sin conexión</strong>Mostrando lo último que guardamos en este celular (' + esc(opciones.sinConexion) + '). Tus sellos pueden haber cambiado.</div>';
     }
-    html += '<section class="carta" aria-label="Tarjeta de cliente frecuente"><span class="tipo">Tarjeta de cliente frecuente</span>' +
+    html += '<section class="carta ' + C.claseTipo(d.tipo) + '" aria-label="Tarjeta de cliente frecuente, ' + esc(T.etiqueta) + '"><span class="tipo">Cliente frecuente · ' + esc(T.etiqueta) + '</span>' +
       '<h1>' + esc(d.nombre) + '</h1><p class="avance">' + esc(avance) + '</p>' +
       '<ol class="sellos">' + casillas + '</ol><p class="nota">' + esc(nota) + '</p></section>';
     if (d.recompensa) {
-      html += '<section class="recompensa"><h2>¡Tienes tu recompensa!</h2><p>Tu siguiente sesión de rehabilitación tiene <strong>' + (d.descuento || CT.DESCUENTO) + '% de descuento</strong>. Avisa en recepción al llegar.</p></section>';
+      html += '<section class="recompensa"><h2>' + (d.descuento >= 100 ? '¡Tienes una sesión gratis!' : '¡Tienes una promoción!') + '</h2><p>' + esc(T.avisoRecompensa) + '</p></section>';
     }
-    html += '<section class="panel codigo-qr"><h2>Tu código</h2><p class="muted pequeno">Muéstralo en recepción en cada sesión de rehabilitación. Sube el brillo de tu pantalla si no lo lee.</p>' +
+    if (d.ganadas > 0) {   // al completar el sello 5 aparece «Promociones» con su cuenta
+      html += '<section class="panel promos"><h2 style="font-size:1.05rem">Promociones</h2><div class="cifras">' +
+        '<div><b>' + d.ganadas + '</b><span>ganadas</span></div>' +
+        '<div><b>' + d.canjes + '</b><span>canjeadas</span></div>' +
+        '<div class="disp"><b>' + (d.recompensa ? 1 : 0) + '</b><span>disponible</span></div></div></section>';
+    }
+    html += '<section class="panel codigo-qr"><h2>Tu código</h2><p class="muted pequeno">Muéstralo en recepción en cada ' + esc(T.sesion) + '. Sube el brillo de tu pantalla si no lo lee.</p>' +
       '<div class="qr">' + C.qrSvg(C.urlTarjeta(codigoActual()), 'Código QR de tu tarjeta CAMI') + '</div></section>';
-    html += '<section class="panel"><h2 style="font-size:1.05rem;margin-bottom:6px">Cómo funciona</h2><p class="regla">' + esc(CT.TEXTO_REGLA) + '</p></section>';
+    html += '<section class="panel"><h2 style="font-size:1.05rem;margin-bottom:6px">Cómo funciona</h2><p class="regla">' + esc(T.regla) + '</p></section>';
     const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
     const guiaPrevia = vista.querySelector('details.guia');
     html += '<details class="guia"' + (opciones.guiaAbierta || (guiaPrevia && guiaPrevia.open) ? ' open' : '') + '><summary>Guarda esta tarjeta en tu celular</summary><div class="cuerpo">' +

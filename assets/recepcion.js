@@ -88,11 +88,11 @@
   function casillasHtml(t) {
     let s = '';
     for (let i = 0; i < t.meta; i++) s += '<span class="' + (i < t.conteo ? 'on' : '') + '">' + (i < t.conteo ? '✓' : (i + 1)) + '</span>';
-    return '<div class="casillas' + (t.recompensa ? ' completa' : '') + '" role="img" aria-label="' + t.conteo + ' de ' + t.meta + ' sellos">' + s + '</div>';
+    return '<div class="casillas ' + C.claseTipo(t.tipo) + (t.recompensa ? ' completa' : '') + '" role="img" aria-label="' + t.conteo + ' de ' + t.meta + ' sellos">' + s + '</div>';
   }
   function mensajeWhatsapp(t) {
     const texto = 'Hola ' + C.primerNombre(t.nombre) + ', esta es tu tarjeta de cliente frecuente de CAMI Xochimilco: ' + C.urlTarjeta(t.codigo) +
-      '\n\nGuárdala en la pantalla de inicio de tu celular. ' + CT.TEXTO_REGLA;
+      '\n\nGuárdala en la pantalla de inicio de tu celular. ' + C.tipo(t.tipo).regla;
     return 'https://wa.me/52' + t.celular + '?text=' + encodeURIComponent(texto);
   }
 
@@ -106,13 +106,15 @@
     if (opciones.exito) h += '<div class="exito" role="status"><span class="grande">' + esc(opciones.exito) + '</span>' + esc(opciones.detalle || '') + '</div>';
     if (opciones.alerta) h += aviso(opciones.alerta.tipo, opciones.alerta.titulo, opciones.alerta.texto);
 
-    const chips = [];
+    const T = C.tipo(t.tipo);
+    const chips = ['<span class="chip ' + (C.claseTipo(t.tipo) === 'tipo-traccion' ? 't-traccion' : '') + '">' + esc(T.etiqueta) + '</span>'];
     if (!t.activa) chips.push('<span class="chip mal">Desactivada</span>');
     if (t.activa && t.selloHoy) chips.push('<span class="chip ok">Sello de hoy ✓</span>');
-    if (t.activa && t.recompensa) chips.push('<span class="chip ok">Recompensa disponible</span>');
-    if (t.canjes) chips.push('<span class="chip">' + t.canjes + (t.canjes === 1 ? ' canje' : ' canjes') + '</span>');
+    if (t.activa && t.canjeHoy) chips.push('<span class="chip ok">Promoción canjeada hoy ✓</span>');
+    if (t.activa && t.recompensa) chips.push('<span class="chip ok">Promoción disponible</span>');
+    if (t.canjes) chips.push('<span class="chip">' + t.canjes + (t.canjes === 1 ? ' promoción canjeada' : ' promociones canjeadas') + '</span>');
 
-    h += '<article class="panel" aria-label="Tarjeta de ' + esc(t.nombre) + '"><div class="res-cabeza"><h2>' + esc(t.nombre) + '</h2>' +
+    h += '<article class="panel ' + C.claseTipo(t.tipo) + '" aria-label="Tarjeta de ' + esc(t.nombre) + ', ' + esc(T.etiqueta) + '"><div class="res-cabeza"><h2>' + esc(t.nombre) + '</h2>' +
       '<p class="muted">Cel. ' + esc(C.celularBonito(t.celular)) + '</p><div class="chips">' + chips.join('') + '</div></div>' +
       casillasHtml(t) + '<p class="avance-txt">' + t.conteo + ' de ' + t.meta + ' sellos</p>';
     if (t.proximoVence) h += '<p class="pequeno muted">El sello más antiguo vence el ' + esc(C.fechaLarga(t.proximoVence)) + '.</p>';
@@ -120,14 +122,20 @@
     h += '<div class="acciones">';
     if (!t.activa) {
       h += '<button class="btn primario" data-accion="activar" data-activa="1" type="button">Reactivar tarjeta</button>';
+    } else if (t.recompensa && t.selloHoy) {
+      h += '<button class="btn" type="button" disabled>La promoción se canjea en la próxima visita</button>' +
+        '<p class="pequeno muted">El quinto sello es de hoy: la promoción aplica en la sexta sesión, en otra visita.</p>';
     } else if (t.recompensa) {
-      h += '<button class="btn ok" data-accion="canjear" type="button">Canjear recompensa · ' + CT.DESCUENTO + '%</button>' +
-        '<p class="pequeno muted">Aplica solo a la sesión individual de rehabilitación de hoy. No se combina con meses sin intereses ni con el paquete de 5 terapias. Después de canjear, la tarjeta vuelve a cero y ya se puede poner el sello de hoy.</p>';
+      h += '<button class="btn ok" data-accion="canjear" type="button">' + esc(T.botonCanje) + '</button>' +
+        '<p class="pequeno muted">' + esc(T.notaCanje) + '</p>';
+    } else if (t.canjeHoy) {
+      h += '<button class="btn" type="button" disabled>Hoy no suma sello</button>' +
+        '<p class="pequeno muted">La sesión con promoción no suma sello. El primer sello del ciclo nuevo es en la próxima visita.</p>';
     } else if (t.selloHoy) {
       h += '<button class="btn" type="button" disabled>Ya tiene sello de hoy</button>';
     } else {
       h += '<button class="btn primario" data-accion="sellar" type="button">Poner sello</button>' +
-        '<p class="pequeno muted">Solo para sesiones de rehabilitación. Consultas y otros servicios no suman sellos.</p>';
+        '<p class="pequeno muted">Solo para ' + esc(T.sesiones) + '. Consultas y otros servicios no suman sellos.</p>';
     }
     h += '</div>';
 
@@ -155,7 +163,7 @@
   function pintarLista(tarjetas) {
     let h = '<div class="panel"><h2 style="font-size:1.1rem;margin-bottom:10px">Hay ' + tarjetas.length + ' tarjetas con ese celular</h2><div class="lista-tarjetas">';
     tarjetas.forEach(function (t, i) {
-      h += '<button class="btn" data-accion="elegir" data-i="' + i + '" type="button"><span>' + esc(t.nombre) + '</span><span class="muted pequeno">' + t.conteo + '/' + t.meta + (t.activa ? '' : ' · desactivada') + '</span></button>';
+      h += '<button class="btn" data-accion="elegir" data-i="' + i + '" type="button"><span>' + esc(t.nombre) + ' · ' + esc(C.tipo(t.tipo).etiqueta) + '</span><span class="muted pequeno">' + t.conteo + '/' + t.meta + (t.activa ? '' : ' · desactivada') + '</span></button>';
     });
     $('resultado').innerHTML = h + '</div></div>';
     $('resultado')._lista = tarjetas;
@@ -183,7 +191,7 @@
     e.preventDefault();
     const boton = $('btn-alta');
     const r = await conCarga(boton, function () {
-      return accion('alta', { nombre: $('alta-nombre').value, celular: $('alta-cel').value, aviso: $('alta-aviso').checked });
+      return accion('alta', { tipo: (document.querySelector('input[name=alta-tipo]:checked') || {}).value, nombre: $('alta-nombre').value, celular: $('alta-cel').value, aviso: $('alta-aviso').checked });
     });
     if (!sesion) return;
     if (r.ok) {
@@ -228,12 +236,12 @@
       ejecutar('sellar', {}, b, function (r) {
         const t2 = r.tarjeta;
         pintarTarjeta(t2, r.ganoRecompensa
-          ? { exito: '¡Sello ' + t2.conteo + ' de ' + t2.meta + '!', detalle: 'Completó su tarjeta: en su siguiente sesión de rehabilitación tiene ' + CT.DESCUENTO + '% de descuento.' }
+          ? { exito: '¡Sello ' + t2.conteo + ' de ' + t2.meta + '!', detalle: 'Completó su tarjeta. Gana una promoción: ' + C.tipo(t2.tipo).avisoRecompensa.replace(' Avisa en recepción al llegar.', '') }
           : { exito: 'Sello puesto · ' + t2.conteo + ' de ' + t2.meta, detalle: 'Listo para el siguiente paciente.' });
       });
     } else if (a === 'canjear') {
       ejecutar('canjear', {}, b, function (r) {
-        pintarTarjeta(r.tarjeta, { exito: 'Recompensa canjeada', detalle: 'Aplica ' + CT.DESCUENTO + '% a la sesión de rehabilitación de hoy. La tarjeta volvió a cero.' });
+        pintarTarjeta(r.tarjeta, { exito: 'Promoción canjeada', detalle: (r.tarjeta.descuento >= 100 ? 'La sesión de hoy es gratis.' : 'Aplica ' + r.tarjeta.descuento + '% a la sesión de hoy.') + ' Hoy no suma sello: la tarjeta volvió a cero y el primer sello es en la próxima visita.' });
       });
     } else if (a === 'activar') {
       ejecutar('activar', { activa: b.getAttribute('data-activa') === '1' }, b, function (r) {

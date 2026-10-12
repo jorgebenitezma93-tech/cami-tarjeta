@@ -15,6 +15,11 @@
   function celularBonito(c) { const d = String(c || '').replace(/\D/g, ''); return d.length === 10 ? d.slice(0, 2) + ' ' + d.slice(2, 6) + ' ' + d.slice(6) : d; }
   function primerNombre(n) { return String(n || '').trim().split(/\s+/)[0] || ''; }
 
+  /** Textos del tipo de tarjeta ('Terapia' o 'Tracción'); si no se reconoce, los de Terapia. */
+  function tipo(nombre) { return (CT.TIPOS || {})[nombre] || (CT.TIPOS || {}).Terapias || {}; }
+  /** Clase CSS del tipo: azul para Terapias y magenta para Alineación Osteopática. */
+  function claseTipo(nombre) { return nombre === 'Alineación Osteopática' ? 'tipo-traccion' : 'tipo-terapia'; }
+
   function urlTarjeta(codigo) { return (CT.URL_TARJETA || (location.origin + '/')) + '?c=' + encodeURIComponent(codigo); }
 
   /** Extrae el código de lo que leyó la cámara: la dirección de la tarjeta (…/?c=CÓDIGO) o el código solo. */
@@ -71,5 +76,5 @@
   };
 
   window.CAMI = { config: CT, esc: esc, fechaCorta: fechaCorta, fechaLarga: fechaLarga, celularBonito: celularBonito, primerNombre: primerNombre,
-    urlTarjeta: urlTarjeta, codigoDe: codigoDe, qrSvg: qrSvg, API: API, FORMATO_CODIGO: FORMATO_CODIGO };
+    tipo: tipo, claseTipo: claseTipo, urlTarjeta: urlTarjeta, codigoDe: codigoDe, qrSvg: qrSvg, API: API, FORMATO_CODIGO: FORMATO_CODIGO };
 })();
