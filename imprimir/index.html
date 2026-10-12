@@ -29,10 +29,17 @@
   /* Reverso */
   .reverso{padding:4mm 5mm}
   .reverso h2{font-size:3.9mm;color:var(--azul);margin:0 0 2.5mm;text-align:center}
-  .reverso .casillas-imp{display:grid;grid-template-columns:repeat(5,1fr);gap:1.8mm 2mm;justify-items:center;margin-bottom:2.5mm}
-  .reverso .casillas-imp span{width:8.6mm;height:8.6mm;border:.35mm solid var(--azul);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3mm;font-weight:600;color:#8FB8D6}
+  .reverso .casillas-imp{display:grid;grid-template-columns:repeat(6,1fr);gap:2mm;justify-items:center;margin:4mm 0 4.5mm}
+  .reverso .casillas-imp span.premio{border-style:dashed;border-width:.5mm;background:#fff;color:var(--ink);font-size:2.4mm;font-weight:800}
+  .reverso.tipo-traccion .casillas-imp span.premio{color:var(--traccion)}
+  .reverso .casillas-imp span{width:10.6mm;height:10.6mm;border:.35mm solid var(--azul);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3mm;font-weight:600;color:#8FB8D6}
   .reverso .casillas-imp span.on{background:var(--azul);color:#fff}
   .reverso p{font-size:2.35mm;line-height:1.25;color:var(--ink);text-align:center}
+  .frente.tipo-traccion .banda{background:var(--traccion)}
+  .frente.tipo-traccion .tipo{color:var(--traccion)}
+  .reverso.tipo-traccion h2{color:var(--traccion)}
+  .reverso.tipo-traccion .casillas-imp span{border-color:var(--traccion);color:#D98ABF}
+  .reverso.tipo-traccion .casillas-imp span.on{background:var(--traccion);color:#fff}
   .consejo{max-width:640px;margin:0 auto}
   @media print{
     @page{margin:10mm}
