@@ -1,13 +1,17 @@
-/* Página de la recepción: escanear QR o buscar por teléfono, poner sello, canjear, dar de alta. Todo con PIN. */
+/* Página de la recepción: escanear QR o buscar por teléfono, poner sello, canjear, dar de alta.
+ * Se entra con una clave personal; el sistema devuelve un código de sesión (no se guarda la clave en el celular) y
+ * la sesión se cierra sola tras CT.INACTIVIDAD_MIN minutos sin tocar la pantalla. */
 (function () {
   'use strict';
   const C = window.CAMI, CT = C.config, esc = C.esc, API = C.API;
   const $ = function (id) { return document.getElementById(id); };
-  const ERRORES_DE_PIN = ['pin_incorrecto', 'bloqueado', 'sin_pin'];
-  const K = { pin: 'cami_r_pin', quien: 'cami_r_quien', recordar: 'cami_r_recordar' };
+  const ERRORES_DE_SESION = ['clave_incorrecta', 'bloqueado', 'sin_clave', 'sesion'];
+  const K = { token: 'cami_r_sesion' };          // se guarda solo en esta pestaña (sessionStorage): al cerrarla se pierde
+  const INACTIVIDAD_MS = (CT.INACTIVIDAD_MIN || 15) * 60000;
 
-  let sesion = null;           // { pin, quien }
+  let sesion = null;           // { token, nombre }
   let tarjetaActual = null;    // última tarjeta mostrada
+  let ultimaActividad = Date.now();
 
   /* ---------- almacenamiento (puede fallar en modo privado) ---------- */
   function leer(almacen, clave) { try { return window[almacen].getItem(clave); } catch (e) { return null; } }
@@ -35,41 +39,56 @@
     sesion = null; tarjetaActual = null;
     $('trabajo').hidden = true; $('login').hidden = false;
     $('login-aviso').innerHTML = texto ? aviso(tipo || 'mal', texto) : (CT.API_URL ? '' : aviso('alerta', 'Falta configurar el sistema', 'Escribe la dirección de Apps Script en assets/config.js (API_URL).'));
-    $('quien').value = leer('localStorage', K.quien) || '';
-    $('recordar').checked = leer('localStorage', K.recordar) === '1';
-    $('pin').value = '';
-    $('pin').focus();
+    $('clave').value = '';
+    $('clave').focus();
   }
   function mostrarTrabajo() {
     $('login').hidden = true; $('trabajo').hidden = false;
-    $('saludo').textContent = sesion.quien === 'Recepción' ? 'Sesión de recepción' : 'Hola, ' + sesion.quien;
+    $('saludo').textContent = 'Hola, ' + sesion.nombre;
     $('resultado').innerHTML = '';
+    ultimaActividad = Date.now();
     irA('escanear');
   }
+  /** Cierra la sesión aquí y avisa al sistema (sin esperar su respuesta). Borra de la pantalla los datos de pacientes. */
   function cerrarSesion(mensaje, tipo) {
-    borrar('sessionStorage', K.pin); borrar('localStorage', K.pin);
+    const token = sesion && sesion.token;
+    borrar('sessionStorage', K.token);
+    $('resultado').innerHTML = '';
+    if (token) API.recepcion('salir', { token: token });
     mostrarLogin(mensaje, tipo);
   }
-  async function entrar(pin, quien, recordar, boton) {
-    const r = await conCarga(boton, function () { return API.recepcion('validar', { pin: pin, quien: quien }); });
-    if (!r.ok) {
-      borrar('sessionStorage', K.pin); borrar('localStorage', K.pin);
-      mostrarLogin(r.mensaje || 'No se pudo entrar.', r.error === 'red' ? 'alerta' : 'mal');
-      return;
-    }
-    sesion = { pin: pin, quien: quien || 'Recepción' };
-    escribir('localStorage', K.quien, quien || '');
-    escribir('localStorage', K.recordar, recordar ? '1' : '0');
-    borrar('sessionStorage', K.pin); borrar('localStorage', K.pin);
-    escribir(recordar ? 'localStorage' : 'sessionStorage', K.pin, pin);
+  async function entrar(clave, boton) {
+    const r = await conCarga(boton, function () { return API.recepcion('entrar', { clave: clave }); });
+    if (!r.ok) { mostrarLogin(r.mensaje || 'No se pudo entrar.', r.error === 'red' ? 'alerta' : 'mal'); return; }
+    sesion = { token: r.token, nombre: r.nombre };
+    escribir('sessionStorage', K.token, r.token);
     mostrarTrabajo();
   }
-  /** Llama al sistema con el PIN de la sesión. Si el PIN ya no sirve, regresa a la pantalla de entrada. */
+  /** Retoma una sesión que sigue abierta (por ejemplo, tras recargar la página). */
+  async function retomar(token) {
+    const r = await API.recepcion('validar', { token: token });
+    if (!r.ok) { borrar('sessionStorage', K.token); mostrarLogin(r.error === 'red' ? r.mensaje : '', 'alerta'); return; }
+    sesion = { token: token, nombre: r.nombre };
+    mostrarTrabajo();
+  }
+  /** Llama al sistema con el código de sesión. Si la sesión venció o la quitaron, regresa a la pantalla de entrada. */
   async function accion(nombre, datos) {
-    const r = await API.recepcion(nombre, Object.assign({ pin: sesion.pin, quien: sesion.quien }, datos));
-    if (ERRORES_DE_PIN.indexOf(r.error) >= 0) cerrarSesion(r.mensaje);
+    const r = await API.recepcion(nombre, Object.assign({ token: sesion.token }, datos));
+    if (ERRORES_DE_SESION.indexOf(r.error) >= 0) cerrarSesion(r.mensaje, 'alerta');
     return r;
   }
+
+  /* ---------- cierre automático por inactividad ---------- */
+  ['pointerdown', 'keydown', 'touchstart', 'scroll', 'input'].forEach(function (ev) {
+    document.addEventListener(ev, function () { ultimaActividad = Date.now(); }, { passive: true, capture: true });
+  });
+  function revisarInactividad() {
+    if (sesion && Date.now() - ultimaActividad > INACTIVIDAD_MS) {
+      cerrarSesion('Cerramos tu sesión por inactividad. Escribe tu clave para continuar.', 'alerta');
+    }
+  }
+  setInterval(revisarInactividad, 15000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) revisarInactividad(); });
 
   /* ---------- pestañas ---------- */
   const PESTANAS = ['escanear', 'telefono', 'nueva'];
@@ -329,17 +348,17 @@
   /* ---------- entrada ---------- */
   $('form-login').addEventListener('submit', function (e) {
     e.preventDefault();
-    const pin = $('pin').value.trim();
-    if (!/^\d{6}$/.test(pin)) { $('login-aviso').innerHTML = aviso('mal', 'El PIN tiene 6 números.'); return; }
-    entrar(pin, $('quien').value.trim(), $('recordar').checked, $('btn-entrar'));
+    const clave = $('clave').value;
+    if (!clave) { $('login-aviso').innerHTML = aviso('mal', 'Escribe tu clave.'); return; }
+    entrar(clave, $('btn-entrar'));
   });
   $('btn-salir').addEventListener('click', function () { cerrarSesion('Cerraste la sesión.', ''); });
   $('enlace-aviso').href = CT.AVISO_URL;
 
-  const pinGuardado = leer('sessionStorage', K.pin) || leer('localStorage', K.pin);
-  if (pinGuardado && CT.API_URL) {
-    $('login').hidden = false; $('login-aviso').innerHTML = aviso('', 'Entrando…');
-    entrar(pinGuardado, leer('localStorage', K.quien) || '', leer('localStorage', K.recordar) === '1', null);
+  const tokenGuardado = leer('sessionStorage', K.token);
+  if (tokenGuardado && CT.API_URL) {
+    $('login').hidden = false; $('login-aviso').innerHTML = aviso('', 'Retomando tu sesión…');
+    retomar(tokenGuardado);
   } else {
     mostrarLogin('', '');
   }
