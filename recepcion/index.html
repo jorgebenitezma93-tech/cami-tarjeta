@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Recepción · Tarjeta CAMI</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0077C0">
+<link rel="icon" href="../assets/favicon-48.png" sizes="48x48">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/tarjeta.css">
+</head>
+<body>
+<main class="app">
+  <header class="marca">
+    <img src="../assets/cami-logo.png" alt="CAMI Xochimilco" width="85" height="52">
+    <span class="etiqueta">Recepción<br>Tarjeta de lealtad</span>
+  </header>
+
+  <!-- 1. Entrada con PIN -->
+  <section id="login" class="panel" hidden>
+    <h1 style="font-size:1.3rem;margin-bottom:6px">Entrar</h1>
+    <p class="muted" style="margin-bottom:16px">Escribe el PIN de recepción. Solo lo conoce la recepcionista.</p>
+    <div id="login-aviso" role="alert"></div>
+    <form id="form-login" autocomplete="off">
+      <div class="campo"><label for="pin">PIN (6 números)</label>
+        <input id="pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" required></div>
+      <div class="campo"><label for="quien">Tu nombre (opcional)</label>
+        <input id="quien" name="quien" type="text" maxlength="30" autocomplete="off" autocapitalize="words">
+        <p class="ayuda">Se guarda junto a cada sello que pongas.</p></div>
+      <div class="casilla-aviso" style="margin-bottom:14px"><input id="recordar" type="checkbox"><label for="recordar">Mantener la sesión abierta en este celular (solo si es el celular de recepción)</label></div>
+      <button class="btn primario" id="btn-entrar" type="submit">Entrar</button>
+    </form>
+  </section>
+
+  <!-- 2. Trabajo diario -->
+  <section id="trabajo" hidden>
+    <div class="barra"><span class="quien" id="saludo"></span><button class="btn chico" id="btn-salir" type="button">Salir</button></div>
+    <div class="pestanas" role="tablist" aria-label="Qué quieres hacer">
+      <button role="tab" id="tab-escanear" aria-controls="p-escanear" aria-selected="true" type="button">Escanear QR</button>
+      <button role="tab" id="tab-telefono" aria-controls="p-telefono" aria-selected="false" type="button">Teléfono</button>
+      <button role="tab" id="tab-nueva" aria-controls="p-nueva" aria-selected="false" type="button">Nueva tarjeta</button>
+    </div>
+
+    <div id="p-escanear" role="tabpanel" aria-labelledby="tab-escanear">
+      <div class="visor" id="visor" hidden><video id="video" playsinline muted></video><div class="marco"></div></div>
+      <p class="estado-camara" id="estado-camara" aria-live="polite">Apunta la cámara al código QR del paciente.</p>
+      <button class="btn primario" id="btn-camara" type="button">Abrir cámara</button>
+    </div>
+
+    <div id="p-telefono" role="tabpanel" aria-labelledby="tab-telefono" hidden>
+      <form id="form-telefono" class="panel">
+        <div class="campo"><label for="tel">Celular del paciente (10 dígitos)</label>
+          <input id="tel" type="tel" inputmode="numeric" maxlength="16" autocomplete="off" placeholder="55 1234 5678" required></div>
+        <button class="btn primario" type="submit">Buscar</button>
+      </form>
+    </div>
+
+    <div id="p-nueva" role="tabpanel" aria-labelledby="tab-nueva" hidden>
+      <form id="form-alta" class="panel" autocomplete="off">
+        <div class="campo"><label for="alta-nombre">Nombre completo</label>
+          <input id="alta-nombre" type="text" maxlength="80" autocomplete="off" autocapitalize="words" required></div>
+        <div class="campo"><label for="alta-cel">Celular (10 dígitos)</label>
+          <input id="alta-cel" type="tel" inputmode="numeric" maxlength="16" autocomplete="off" placeholder="55 1234 5678" required>
+          <p class="ayuda">Solo nombre y celular. Nunca se anota nada de salud.</p></div>
+        <div class="casilla-aviso" style="margin-bottom:14px"><input id="alta-aviso" type="checkbox" required>
+          <label for="alta-aviso">El paciente aceptó el <a id="enlace-aviso" href="#" target="_blank" rel="noopener">aviso de privacidad</a> del programa de cliente frecuente.</label></div>
+        <button class="btn primario" id="btn-alta" type="submit">Crear tarjeta</button>
+      </form>
+    </div>
+
+    <div id="resultado" aria-live="polite"></div>
+  </section>
+
+  <p class="pie" id="pie-sin-config" hidden></p>
+</main>
+<script src="../assets/config.js"></script>
+<script src="../assets/qrcode.min.js"></script>
+<script src="../assets/jsQR.min.js"></script>
+<script src="../assets/comun.js"></script>
+<script src="../assets/recepcion.js"></script>
+</body>
+</html>

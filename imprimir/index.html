@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Imprimir tarjeta · CAMI</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="../assets/favicon-48.png" sizes="48x48">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/tarjeta.css">
+<style>
+  .hoja{display:flex;flex-wrap:wrap;gap:6mm;justify-content:center;margin:16px 0}
+  .cara{position:relative;width:85.6mm;height:54mm;background:#fff;border:.3mm dashed #8A98A8;border-radius:3mm;overflow:hidden;color:var(--ink);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;flex:none}
+  .cara .etq{position:absolute;top:-5mm;left:0;font-size:2.8mm;color:var(--muted)}
+  .envoltura{position:relative;padding-top:5mm}
+  /* Frente */
+  .frente .banda{position:absolute;left:0;top:0;bottom:0;width:3mm;background:var(--azul)}
+  .frente .logo{position:absolute;left:7mm;top:4mm;height:13mm}
+  .frente .tipo{position:absolute;left:7mm;top:18.5mm;width:44mm;font-size:2.5mm;line-height:1.15;font-weight:700;letter-spacing:.15mm;text-transform:uppercase;color:var(--azul)}
+  .frente .nombre{position:absolute;left:7mm;top:25mm;width:44mm;font-size:4.2mm;font-weight:700;line-height:1.15;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .frente .qr{position:absolute;right:3.5mm;top:5mm;width:29mm;height:29mm}
+  .frente .qr svg{display:block;width:100%;height:100%}
+  .frente .indica{position:absolute;right:3.5mm;top:34.5mm;width:29mm;text-align:center;font-size:2.3mm;line-height:1.2;color:var(--muted)}
+  .frente .pie-cara{position:absolute;left:7mm;right:3.5mm;bottom:3mm;font-size:2.3mm;color:var(--muted);border-top:.2mm solid var(--line);padding-top:1.2mm}
+  /* Reverso */
+  .reverso{padding:4mm 5mm}
+  .reverso h2{font-size:3.9mm;color:var(--azul);margin:0 0 2.5mm;text-align:center}
+  .reverso .casillas-imp{display:grid;grid-template-columns:repeat(5,1fr);gap:1.8mm 2mm;justify-items:center;margin-bottom:2.5mm}
+  .reverso .casillas-imp span{width:8.6mm;height:8.6mm;border:.35mm solid var(--azul);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3mm;font-weight:600;color:#8FB8D6}
+  .reverso .casillas-imp span.on{background:var(--azul);color:#fff}
+  .reverso p{font-size:2.35mm;line-height:1.25;color:var(--ink);text-align:center}
+  .consejo{max-width:640px;margin:0 auto}
+  @media print{
+    @page{margin:10mm}
+    body{background:#fff}
+    .no-imprimir{display:none!important}
+    .app{max-width:none;padding:0}
+    .hoja{margin:0;justify-content:flex-start}
+    .cara .etq{display:none}
+    .envoltura{padding-top:0}
+  }
+</style>
+</head>
+<body>
+<main class="app" style="max-width:720px">
+  <div class="no-imprimir" id="cabecera">
+    <header class="marca"><img src="../assets/cami-logo.png" alt="CAMI Xochimilco" width="85" height="52"><span class="etiqueta">Tarjeta<br>impresa</span></header>
+    <div class="consejo">
+      <div id="mensaje"></div>
+      <div class="panel" id="instrucciones" hidden>
+        <h1 style="font-size:1.15rem;margin-bottom:6px">Imprime a tamaño real</h1>
+        <ol class="pequeno muted" style="margin:0 0 12px;padding-left:20px">
+          <li>En la ventana de impresión elige escala <strong>100%</strong> (no «ajustar a la página») y desactiva encabezados y pies de página.</li>
+          <li>Recorta por las líneas punteadas: quedan dos piezas, frente y reverso. Pégalas por detrás o plastifícalas juntas.</li>
+          <li>Si tu impresora lo permite, imprime a doble cara con el frente y el reverso por el mismo lado del papel.</li>
+        </ol>
+        <button class="btn primario" id="btn-imprimir" type="button">Imprimir</button>
+      </div>
+    </div>
+  </div>
+  <div class="hoja" id="hoja" hidden>
+    <div class="envoltura"><div class="cara frente" id="frente"></div></div>
+    <div class="envoltura"><div class="cara reverso" id="reverso"></div></div>
+  </div>
+</main>
+<script src="../assets/config.js"></script>
+<script src="../assets/qrcode.min.js"></script>
+<script src="../assets/comun.js"></script>
+<script src="../assets/imprimir.js"></script>
+</body>
+</html>
