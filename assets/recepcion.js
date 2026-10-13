@@ -108,7 +108,7 @@
     let s = '';
     for (let i = 0; i < t.meta; i++) {
       const sello = t.sellos[i];   // cada sello puesto muestra debajo la fecha en que se puso
-      s += '<div class="cas"><span class="' + (sello ? 'on' : '') + '">' + (sello ? '✓' : (i + 1)) + '</span><small>' + (sello ? esc(C.fechaCorta(sello.fecha)) : '') + '</small></div>';
+      s += '<div class="cas"><span class="' + (sello ? 'on' : '') + '">' + (sello ? C.selloImg() : (i + 1)) + '</span><small>' + (sello ? esc(C.fechaCorta(sello.fecha)) : '') + '</small></div>';
     }
     return '<div class="casillas ' + C.claseTipo(t.tipo) + (t.recompensa ? ' completa' : '') + '" role="img" aria-label="' + t.conteo + ' de ' + t.meta + ' sellos">' + s + '</div>';
   }

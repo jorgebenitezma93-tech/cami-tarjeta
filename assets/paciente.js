@@ -17,8 +17,6 @@
   const codigo = codigoUrl || C.codigoDe(guardado(CLAVE_CODIGO) || '');
   let conteoPrevio = -1;
 
-  const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
   function mensaje(titulo, texto, tipo) {
     vista.innerHTML = '<div class="aviso ' + (tipo || '') + '"><strong>' + esc(titulo) + '</strong>' + esc(texto) + '</div>';
   }
@@ -32,7 +30,7 @@
       const s = d.sellos[i];
       const nuevo = s && conteoPrevio >= 0 && i >= conteoPrevio ? ' nuevo' : '';
       casillas += s
-        ? '<li class="sello puesto' + nuevo + '"><span class="circulo" role="img" aria-label="Sello ' + (i + 1) + ', ' + esc(C.fechaLarga(s.fecha)) + '">' + CHECK + '</span><span class="fecha">' + esc(C.fechaCorta(s.fecha)) + '</span></li>'
+        ? '<li class="sello puesto' + nuevo + '"><span class="circulo" role="img" aria-label="Sello ' + (i + 1) + ', ' + esc(C.fechaLarga(s.fecha)) + '">' + C.selloImg() + '</span><span class="fecha">' + esc(C.fechaCorta(s.fecha)) + '</span></li>'
         : '<li class="sello"><span class="circulo" aria-label="Sello ' + (i + 1) + ', vacío">' + (i + 1) + '</span><span class="fecha"></span></li>';
     }
     const premioTxt = d.descuento >= 100 ? 'GRATIS' : d.descuento + '%';

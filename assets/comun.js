@@ -20,6 +20,10 @@
   /** Clase CSS del tipo: azul para Terapias y magenta para Alineación Osteopática. */
   function claseTipo(nombre) { return nombre === 'Alineación Osteopática' ? 'tipo-traccion' : 'tipo-terapia'; }
 
+  /** El sello es el ícono de CAMI (columna con contorno): se usa en lugar de la palomita. Misma carpeta que este script. */
+  const URL_SELLO = document.currentScript && document.currentScript.src ? new URL('sello-cami.png', document.currentScript.src).href : '/assets/sello-cami.png';
+  function selloImg() { return '<img class="sello-img" src="' + URL_SELLO + '" alt="" width="48" height="48">'; }
+
   function urlTarjeta(codigo) { return (CT.URL_TARJETA || (location.origin + '/')) + '?c=' + encodeURIComponent(codigo); }
 
   /** Extrae el código de lo que leyó la cámara: la dirección de la tarjeta (…/?c=CÓDIGO) o el código solo. */
@@ -76,5 +80,5 @@
   };
 
   window.CAMI = { config: CT, esc: esc, fechaCorta: fechaCorta, fechaLarga: fechaLarga, celularBonito: celularBonito, primerNombre: primerNombre,
-    tipo: tipo, claseTipo: claseTipo, urlTarjeta: urlTarjeta, codigoDe: codigoDe, qrSvg: qrSvg, API: API, FORMATO_CODIGO: FORMATO_CODIGO };
+    tipo: tipo, claseTipo: claseTipo, selloImg: selloImg, urlTarjeta: urlTarjeta, codigoDe: codigoDe, qrSvg: qrSvg, API: API, FORMATO_CODIGO: FORMATO_CODIGO };
 })();
