@@ -20,7 +20,7 @@
       '<div class="nombre">' + esc(d.nombre) + '</div>' +
       '<div class="qr">' + C.qrSvg(C.urlTarjeta(codigo), 'Código QR de la tarjeta') + '</div>' +
       '<div class="indica">Muestra este código en recepción</div>' +
-      '<div class="fiestas-imp">Felices fiestas</div>' +
+      '<div class="fiestas-imp">Felices fiestas</div><i class="ramita" aria-hidden="true"></i>' +
       '<div class="pie-cara">camixochimilco.com.mx · WhatsApp ' + esc(CT.TELEFONO_TXT) + '</div>' +
       '<span class="etq">Frente</span>';
 
@@ -35,7 +35,7 @@
     $('reverso').innerHTML =
       '<h2>' + esc(T.tituloImpreso) + '</h2>' +
       '<div class="casillas-imp">' + casillas + '</div>' +
-      '<p>' + esc(T.regla) + '</p>' +
+      '<p>' + esc(T.regla) + '</p><i class="ramita" aria-hidden="true"></i><i class="bolitas" aria-hidden="true"></i>' +
       '<span class="etq">Reverso</span>';
 
     $('hoja').hidden = false; $('instrucciones').hidden = false;
