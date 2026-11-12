@@ -41,6 +41,25 @@
   .reverso.tipo-traccion .casillas-imp span{border-color:var(--traccion);color:#D98ABF}
   .reverso.tipo-traccion .casillas-imp span.on{background:var(--traccion);color:#fff}
   .consejo{max-width:640px;margin:0 auto}
+  .casilla-nav{display:flex;gap:10px;align-items:center;margin:0 0 12px;font-weight:600;font-size:.95rem;cursor:pointer}
+  .casilla-nav input{width:22px;height:22px;flex:none}
+  /* Diseño navideño de la tarjeta impresa: luces arriba, banda con degradado y un saludo; poca tinta */
+  .fiestas-imp{display:none}
+  .cara.nav::before{content:"";position:absolute;left:0;right:0;top:0;height:3.4mm;pointer-events:none;z-index:2;
+    background:
+      radial-gradient(circle at 1.4mm 2mm,#E0453F 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
+      radial-gradient(circle at 3.8mm 2.4mm,#E9B93B 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
+      radial-gradient(circle at 6.2mm 2mm,#7FB415 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
+      radial-gradient(circle at 8.6mm 2.4mm,#4FB0E6 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
+      linear-gradient(#9AA9B8,#9AA9B8) 0 1.1mm/100% .25mm no-repeat}
+  .frente.nav .banda{background:linear-gradient(180deg,#0A3560,#0077C0)}
+  .frente.nav.tipo-traccion .banda{background:linear-gradient(180deg,#4E0A33,#B8007A)}
+  .frente.nav .fiestas-imp{display:block;position:absolute;right:3.5mm;top:40.6mm;width:29mm;text-align:center;font-size:2.6mm;font-weight:800;letter-spacing:.2mm;text-transform:uppercase;color:#006BAD}
+  .frente.nav.tipo-traccion .fiestas-imp{color:#8A005C}
+  .reverso.nav{padding-top:5.4mm}
+  .reverso.nav h2{margin-bottom:1.6mm}
+  .reverso.nav .casillas-imp{margin:2.6mm 0 3mm}
+  .reverso.nav .casillas-imp span.premio{border-color:#C28A00;color:#8A5E00}
   @media print{
     @page{margin:10mm}
     body{background:#fff}
@@ -65,6 +84,7 @@
           <li>Recorta por las líneas punteadas: quedan dos piezas, frente y reverso. Pégalas por detrás o plastifícalas juntas.</li>
           <li>Si tu impresora lo permite, imprime a doble cara con el frente y el reverso por el mismo lado del papel.</li>
         </ol>
+        <label class="casilla-nav"><input type="checkbox" id="chk-navidad"> <span>Diseño navideño (edición de fiestas)</span></label>
         <button class="btn primario" id="btn-imprimir" type="button">Imprimir</button>
       </div>
     </div>

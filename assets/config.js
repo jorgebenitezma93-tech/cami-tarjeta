@@ -13,6 +13,11 @@ window.CAMI_TARJETA = {
   VIGENCIA_MESES: 12,
   INACTIVIDAD_MIN: 15,   // minutos sin tocar la pantalla de recepción para cerrar la sesión (igual en el .gs)
 
+  // Temas de temporada. El diseño navideño se activa solo entre estas fechas (AAAA-MM-DD, ambas incluidas) y se apaga
+  // después. Para verlo fuera de fechas: agregar ?tema=navidad a la dirección de la tarjeta; ?tema=normal lo quita.
+  // El próximo año hay que cambiar las fechas (por ejemplo 2027-12-01 a 2028-01-06).
+  TEMAS: { navidad: { desde: "2026-11-12", hasta: "2027-01-06" } },
+
   // Dos tipos de tarjeta (regla de CAMI, 12 de octubre de 2026). Los sellos necesarios y el descuento de cada tipo
   // se definen en TIPOS dentro de apps-script/tarjeta-apps-script.gs; si cambian allá, cambiar aquí los textos.
   // La sexta sesión (la del premio) no suma sello. Los textos para el paciente están pendientes del visto bueno del doctor.

@@ -20,6 +20,7 @@
       '<div class="nombre">' + esc(d.nombre) + '</div>' +
       '<div class="qr">' + C.qrSvg(C.urlTarjeta(codigo), 'Código QR de la tarjeta') + '</div>' +
       '<div class="indica">Muestra este código en recepción</div>' +
+      '<div class="fiestas-imp">Felices fiestas</div>' +
       '<div class="pie-cara">camixochimilco.com.mx · WhatsApp ' + esc(CT.TELEFONO_TXT) + '</div>' +
       '<span class="etq">Frente</span>';
 
@@ -39,6 +40,12 @@
 
     $('hoja').hidden = false; $('instrucciones').hidden = false;
     document.title = 'Tarjeta CAMI · ' + d.nombre;
+    // Diseño navideño: viene marcado en temporada (o con ?tema=navidad) y se puede quitar o poner antes de imprimir.
+    const casilla = $('chk-navidad');
+    function aplicarTema() { ['frente', 'reverso'].forEach(function (id) { $(id).classList.toggle('nav', casilla.checked); }); }
+    casilla.checked = C.tema() === 'navidad';
+    casilla.addEventListener('change', aplicarTema);
+    aplicarTema();
   }
   $('btn-imprimir').addEventListener('click', function () { window.print(); });
   iniciar();

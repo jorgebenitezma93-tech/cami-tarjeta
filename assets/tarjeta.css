@@ -157,4 +157,35 @@ details.mas .acciones{margin-top:8px}
 .promos .cifras span{font-size:.78rem;color:var(--muted)}
 .opciones-tipo input:focus-visible+span{outline:3px solid var(--celeste);outline-offset:2px}
 
+/* ================= Tema navideño (se activa con la clase .tema-navidad en <html>; ver comun.js y config.js) ================= */
+.fiestas{display:none}
+.tema-navidad .fiestas{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 12px;padding:10px 14px;border-radius:16px;
+  background:linear-gradient(90deg,#FFF1CF,#FFE6A8,#FFF1CF);color:#6B4300;border:1px solid #F0CE7A;text-align:center}
+.fiestas strong{display:block;font-size:1.05rem;letter-spacing:-.01em;line-height:1.15}
+.fiestas span{display:block;font-size:.8rem;line-height:1.25}
+.fiestas svg{flex:none;color:#C28A00}
+.tema-navidad body.paciente{min-height:100vh;background:linear-gradient(180deg,#E3EFF9 0%,#F6F8FA 60%) fixed no-repeat #F6F8FA}
+.tema-navidad body.paciente::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.75;background-size:160px 160px;animation:nieve 30s linear infinite;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23BBD7EC'%3E%3Ccircle cx='20' cy='30' r='2.4'/%3E%3Ccircle cx='70' cy='12' r='1.6'/%3E%3Ccircle cx='120' cy='40' r='2.8'/%3E%3Ccircle cx='45' cy='85' r='2'/%3E%3Ccircle cx='100' cy='100' r='2.4'/%3E%3Ccircle cx='145' cy='130' r='1.8'/%3E%3Ccircle cx='15' cy='140' r='2.2'/%3E%3Ccircle cx='80' cy='150' r='1.5'/%3E%3C/g%3E%3Cg stroke='%23BBD7EC' stroke-width='1.4' stroke-linecap='round' fill='none'%3E%3Cpath d='M130 70v20M121.3 75l17.4 10M121.3 85l17.4-10'/%3E%3Cpath d='M35 107v16M28 111l14 8M28 119l14-8'/%3E%3C/g%3E%3C/svg%3E")}
+@keyframes nieve{to{background-position:0 160px}}
+.tema-navidad body.paciente .app{position:relative;z-index:1}
+.tema-navidad .carta{position:relative;overflow:hidden;padding-top:32px;background-color:#0A3560;background-size:160px 160px,auto;box-shadow:0 18px 40px -20px rgba(8,50,95,.85);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='white' fill-opacity='.55'%3E%3Ccircle cx='20' cy='30' r='2.2'/%3E%3Ccircle cx='70' cy='12' r='1.5'/%3E%3Ccircle cx='120' cy='40' r='2.6'/%3E%3Ccircle cx='45' cy='85' r='1.8'/%3E%3Ccircle cx='100' cy='100' r='2.2'/%3E%3Ccircle cx='145' cy='130' r='1.6'/%3E%3Ccircle cx='15' cy='140' r='2'/%3E%3Ccircle cx='80' cy='150' r='1.4'/%3E%3C/g%3E%3Cg stroke='white' stroke-opacity='.5' stroke-width='1.3' stroke-linecap='round' fill='none'%3E%3Cpath d='M130 70v20M121.3 75l17.4 10M121.3 85l17.4-10'/%3E%3Cpath d='M35 107v16M28 111l14 8M28 119l14-8'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(150deg,#0A3560 0%,#0077C0 62%,#27A3DE 100%)}
+.tema-navidad .carta.tipo-traccion{background-color:#4E0A33;box-shadow:0 18px 40px -20px rgba(100,0,65,.85);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='white' fill-opacity='.5'%3E%3Ccircle cx='20' cy='30' r='2.2'/%3E%3Ccircle cx='70' cy='12' r='1.5'/%3E%3Ccircle cx='120' cy='40' r='2.6'/%3E%3Ccircle cx='45' cy='85' r='1.8'/%3E%3Ccircle cx='100' cy='100' r='2.2'/%3E%3Ccircle cx='145' cy='130' r='1.6'/%3E%3Ccircle cx='15' cy='140' r='2'/%3E%3Ccircle cx='80' cy='150' r='1.4'/%3E%3C/g%3E%3Cg stroke='white' stroke-opacity='.45' stroke-width='1.3' stroke-linecap='round' fill='none'%3E%3Cpath d='M130 70v20M121.3 75l17.4 10M121.3 85l17.4-10'/%3E%3Cpath d='M35 107v16M28 111l14 8M28 119l14-8'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(150deg,#4E0A33 0%,#A8006E 58%,#D1008A 100%)}
+/* Foco de luces navideñas en la parte de arriba de la tarjeta */
+.tema-navidad .carta::before{content:"";position:absolute;left:0;right:0;top:0;height:22px;pointer-events:none;
+  background:
+    radial-gradient(circle at 8px 13px,#FF6B6B 0 4.6px,transparent 5.2px) 0 0/52px 22px repeat-x,
+    radial-gradient(circle at 21px 15px,#F4C95D 0 4.6px,transparent 5.2px) 0 0/52px 22px repeat-x,
+    radial-gradient(circle at 34px 13px,#9ACD1F 0 4.6px,transparent 5.2px) 0 0/52px 22px repeat-x,
+    radial-gradient(circle at 47px 15px,#8FD3FF 0 4.6px,transparent 5.2px) 0 0/52px 22px repeat-x,
+    linear-gradient(rgba(255,255,255,.65),rgba(255,255,255,.65)) 0 6px/100% 1.6px no-repeat}
+.tema-navidad .carta .sello.puesto .circulo{box-shadow:0 0 0 3px #F4C95D}
+.tema-navidad .carta .sello.premio .circulo{border-color:#F4C95D;color:#F4C95D;background:rgba(244,201,93,.16)}
+.tema-navidad .carta .sello.premio.listo .circulo{background:#F4C95D;border-color:#F4C95D;color:#4B2F00}
+.tema-navidad .recompensa{background:linear-gradient(135deg,#17803D,#0F5C2B);border:2px solid #F4C95D}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

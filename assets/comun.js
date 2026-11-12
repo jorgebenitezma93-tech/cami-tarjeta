@@ -15,6 +15,22 @@
   function celularBonito(c) { const d = String(c || '').replace(/\D/g, ''); return d.length === 10 ? d.slice(0, 2) + ' ' + d.slice(2, 6) + ' ' + d.slice(6) : d; }
   function primerNombre(n) { return String(n || '').trim().split(/\s+/)[0] || ''; }
 
+  /** Tema de temporada: 'navidad' dentro de las fechas de config.js (o con ?tema=navidad); '' el resto del año (o con ?tema=normal). */
+  function tema() {
+    const forzado = new URLSearchParams(location.search).get('tema');
+    if (forzado === 'navidad') return 'navidad';
+    if (forzado === 'normal') return '';
+    const t = (CT.TEMAS || {}).navidad;
+    if (!t) return '';
+    const h = new Date(), p = function (n) { return ('0' + n).slice(-2); };
+    const hoy = h.getFullYear() + '-' + p(h.getMonth() + 1) + '-' + p(h.getDate());
+    return hoy >= t.desde && hoy <= t.hasta ? 'navidad' : '';
+  }
+  const TEMA = tema();
+  if (TEMA) document.documentElement.classList.add('tema-' + TEMA);
+  /** Copo de nieve en SVG (para el cintillo de fiestas). */
+  const COPO = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5"/></svg>';
+
   /** Textos del tipo de tarjeta ('Terapia' o 'Tracción'); si no se reconoce, los de Terapia. */
   function tipo(nombre) { return (CT.TIPOS || {})[nombre] || (CT.TIPOS || {}).Terapias || {}; }
   /** Clase CSS del tipo: azul para Terapias y magenta para Alineación Osteopática. */
@@ -80,5 +96,5 @@
   };
 
   window.CAMI = { config: CT, esc: esc, fechaCorta: fechaCorta, fechaLarga: fechaLarga, celularBonito: celularBonito, primerNombre: primerNombre,
-    tipo: tipo, claseTipo: claseTipo, selloImg: selloImg, urlTarjeta: urlTarjeta, codigoDe: codigoDe, qrSvg: qrSvg, API: API, FORMATO_CODIGO: FORMATO_CODIGO };
+    tema: function () { return TEMA; }, copo: COPO, tipo: tipo, claseTipo: claseTipo, selloImg: selloImg, urlTarjeta: urlTarjeta, codigoDe: codigoDe, qrSvg: qrSvg, API: API, FORMATO_CODIGO: FORMATO_CODIGO };
 })();

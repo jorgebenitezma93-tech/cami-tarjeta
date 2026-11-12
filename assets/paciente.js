@@ -46,6 +46,9 @@
     if (opciones.sinConexion) {
       html += '<div class="aviso alerta"><strong>Sin conexión</strong>Mostrando lo último que guardamos en este celular (' + esc(opciones.sinConexion) + '). Tus sellos pueden haber cambiado.</div>';
     }
+    if (C.tema() === 'navidad') {
+      html += '<div class="fiestas">' + C.copo + '<div><strong>Felices fiestas</strong><span>Gracias por cuidarte con CAMI este año</span></div>' + C.copo + '</div>';
+    }
     html += '<section class="carta ' + C.claseTipo(d.tipo) + '" aria-label="Tarjeta de cliente frecuente, ' + esc(T.etiqueta) + '"><span class="tipo">Cliente frecuente · ' + esc(T.etiqueta) + '</span>' +
       '<h1>' + esc(d.nombre) + '</h1><p class="avance">' + esc(avance) + '</p>' +
       '<ol class="sellos">' + casillas + '</ol><p class="nota">' + esc(nota) + '</p></section>';
