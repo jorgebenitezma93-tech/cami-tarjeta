@@ -43,23 +43,13 @@
   .consejo{max-width:640px;margin:0 auto}
   .casilla-nav{display:flex;gap:10px;align-items:center;margin:0 0 12px;font-weight:600;font-size:.95rem;cursor:pointer}
   .casilla-nav input{width:22px;height:22px;flex:none}
-  /* Diseño navideño de la tarjeta impresa: luces arriba, banda con degradado y un saludo; poca tinta */
+  /* Diseño navideño sobrio de la tarjeta impresa: hilo dorado arriba, banda lisa y un saludo discreto; poca tinta */
   .fiestas-imp{display:none}
-  .cara.nav::before{content:"";position:absolute;left:0;right:0;top:0;height:3.4mm;pointer-events:none;z-index:2;
-    background:
-      radial-gradient(circle at 1.4mm 2mm,#E0453F 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
-      radial-gradient(circle at 3.8mm 2.4mm,#E9B93B 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
-      radial-gradient(circle at 6.2mm 2mm,#7FB415 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
-      radial-gradient(circle at 8.6mm 2.4mm,#4FB0E6 0 .8mm,transparent .86mm) 0 0/9.6mm 3.4mm repeat-x,
-      linear-gradient(#9AA9B8,#9AA9B8) 0 1.1mm/100% .25mm no-repeat}
-  .frente.nav .banda{background:linear-gradient(180deg,#0A3560,#0077C0)}
-  .frente.nav.tipo-traccion .banda{background:linear-gradient(180deg,#4E0A33,#B8007A)}
-  .frente.nav .fiestas-imp{display:block;position:absolute;right:3.5mm;top:40.6mm;width:29mm;text-align:center;font-size:2.6mm;font-weight:800;letter-spacing:.2mm;text-transform:uppercase;color:#006BAD}
-  .frente.nav.tipo-traccion .fiestas-imp{color:#8A005C}
-  .reverso.nav{padding-top:5.4mm}
-  .reverso.nav h2{margin-bottom:1.6mm}
-  .reverso.nav .casillas-imp{margin:2.6mm 0 3mm}
-  .reverso.nav .casillas-imp span.premio{border-color:#C28A00;color:#8A5E00}
+  .cara.nav::before{content:"";position:absolute;left:0;right:0;top:0;height:.8mm;pointer-events:none;z-index:2;background:linear-gradient(90deg,#B08A2E,#E6D191 50%,#B08A2E)}
+  .frente.nav .banda{background:#0A2F57}
+  .frente.nav.tipo-traccion .banda{background:#5A1442}
+  .frente.nav .fiestas-imp{display:block;position:absolute;right:3.5mm;top:40.6mm;width:29mm;text-align:center;font-size:2.2mm;font-weight:600;letter-spacing:.4mm;text-transform:uppercase;color:#8A6A1C}
+  .reverso.nav .casillas-imp span.premio{border-color:#B08A2E;color:#7A5A12}
   @media print{
     @page{margin:10mm}
     body{background:#fff}
